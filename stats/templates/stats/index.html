@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
+	<meta name="viewport" content="width=device-width, initial-scale=0.5">
+	<meta name="author" content="Dan Davis">
+	<title>States Energy Stats</title>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="/static/stats/statspage.css">
+</head>
+<body>
+	<div class="container">
+	<div id="div_header" class="page-header">
+		<h1>Energy Statistics by State</h1>
+		<div class="details">
+			<span id="author" class="author">Dan Davis</span><br>
+			<span id="email" class="email"><a href="mailto:dan@dandavis.dev">dan@dandavis.dev</a></span><br>
+			<span id="revnumber">version 0.1 July 25,</span>
+			<span id="revdate">2019</span><br>
+			<span id="beg">Bitcoin Donations: </span>
+			<span id="btc_donate">{{ btc_address }}</span><br><br>
+		</div>
+	</div>
+	<div id="div_about">
+		<p>
+			All of this data was pulled from official US Government data at
+			<a href="https://www.eia.gov/opendata/"></a>. Not every data type has datapoints updated through 2018 but I scan for new data every month and update the site so what you see here is what's available to the public. 
+		</p>
+	</div>
+	<div id="div_forms_select">
+		<span>Select a Data Type</span><br>
+		<form action="/stats">
+			<select name="data_type">
+				<option value="{{ data_type }}" selected>{{ data_type }}</option>
+				{% for dt in data_type_list %}
+				<option value="{{ dt }}">{{ dt }}</option>
+				{% endfor %}
+			</select><br><br>
+		<span>Select a Year</span><br>
+		<form action="/stats">
+			<select name="year">
+				<option value="{{ year }}" selected>{{ year }}</option>
+				{% for y in year_list %}
+				<option value="{{ y }}">{{ y }}</option>
+				{% endfor %}
+			</select><br><br>
+			<button type="submit" class="btn btn-default">Submit</button>
+		</form><br>
+	</div>
+	<div id="div_data_type_table">
+		<span>Click table header to hide/show rows</span><br>
+		<table align="center">
+			<tr onclick="toggleRows()">
+				{% if asc %}
+				<th>
+				<a href="/stats/?data_type={{ data_type }}&year={{ year }}">Rank &#8595;</a>
+				</th>
+				{% else %}
+				<th>
+				<a href="/stats/?data_type={{ data_type }}&year={{ year }}&asc=True">Rank &#8593;</a>
+				</th>
+				{% endif %}
+				<th>State</th>
+				<th>{{ data_type_name }}</th>
+			</tr>
+			{% for dtby in data_type_by_year_list %}
+			<tr id="hide_row{{ forloop.counter }}" class="hide_row" style="display:table-row;">
+				<td>{{ dtby.rank }}</td>
+				<td>{{ dtby.state }}</td>
+				<td>{{ dtby.data_value }} {{ dtby.data_unit }}</td>
+			</tr>
+			{% endfor %}
+		</table>	
+	</div>
+	</div>
+	<script type="text/javascript">
+		function toggleRows() {
+			"use strict";
+			let elems = document.getElementsByClassName("hide_row");
+			for (let i=0;i<elems.length;i+=1){
+				if( elems[i].style.display=='none' ){
+					elems[i].style.display = 'table-row';
+				}else{
+					elems[i].style.display = 'none';
+				}
+			}
+		}
+	</script>
+</body>
+</html>
