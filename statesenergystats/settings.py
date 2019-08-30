@@ -20,12 +20,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = '1vt5cu4zj-h7-!+lmjrwx!pc^m)9w$w)tv(zgtvs=6ng(#2k(2'
+# SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ["10.0.2.126", "statesenergystats.info"]
+ALLOWED_HOSTS = ['192.168.1.149', 'localhost']
 
 
 # Application definition
@@ -76,8 +77,11 @@ WSGI_APPLICATION = 'statesenergystats.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'energyData.db'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'energy_db',
+        'USER': 'tesla',
+        'HOST': 'localhost',
+        'PORT': 5432,
     }
 }
 
@@ -105,7 +109,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/New_York'
 
 USE_I18N = True
 
@@ -118,3 +122,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
